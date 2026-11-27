@@ -1,0 +1,400 @@
+
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Akash Special & UKSSSC Test</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;font-family:Arial,sans-serif;
+ background:#eef2f8;color:#172033;
+}
+header{
+ background:linear-gradient(135deg,#102a56,#1769aa);
+ color:white;text-align:center;padding:25px 12px;
+}
+header h1{margin:0;font-size:25px}
+header p{margin:8px 0 0;color:#dceaff}
+.container{max-width:800px;margin:20px auto;padding:12px}
+.card{
+ background:white;padding:18px;border-radius:15px;
+ box-shadow:0 3px 15px #0001;margin-bottom:15px;
+}
+.info{
+ display:flex;justify-content:space-between;
+ flex-wrap:wrap;gap:10px;color:#1769aa;font-weight:bold;
+}
+.progress{
+ height:8px;background:#dce4ef;border-radius:10px;
+ margin:15px 0;overflow:hidden;
+}
+#bar{height:100%;width:0;background:#16a36a}
+.question{font-size:18px;font-weight:bold;margin:18px 0}
+.option{
+ display:block;padding:13px;margin:9px 0;
+ border:1px solid #d5dce8;border-radius:10px;
+ cursor:pointer;transition:.2s;
+}
+.option:hover{background:#edf5ff}
+.option input{margin-right:10px}
+.option.selected{background:#e2efff;border-color:#1769aa}
+button{
+ border:0;padding:13px 20px;border-radius:9px;
+ background:#1769aa;color:white;font-size:15px;
+ font-weight:bold;cursor:pointer;margin:5px;
+}
+.green{background:#168653}
+.red{background:#d83c45}
+.center{text-align:center}
+.hide{display:none}
+#result h2{color:#1769aa}
+.review{
+ padding:13px;background:#f4f6fa;
+ border-radius:10px;margin:12px 0;
+}
+.correct{color:#13834b;font-weight:bold}
+.wrong{color:#d83232;font-weight:bold}
+footer{text-align:center;padding:20px;color:#68758a}
+</style>
+</head>
+<body>
+
+<header>
+<h1>🎯 AKASH SPECIAL & UKSSSC TEST</h1>
+<p>❤️ Special Questions + Geography + UP GK</p>
+</header>
+
+<div class="container">
+
+<div class="card">
+<div class="info">
+<span>📚 कुल प्रश्न: 32</span>
+<span>📝 प्रश्न: <span id="number">1</span>/32</span>
+<span>⭐ सही: <span id="live">0</span></span>
+</div>
+<div class="progress"><div id="bar"></div></div>
+<div class="center" id="topic"></div>
+</div>
+
+<div class="card" id="quiz">
+<div class="question" id="question"></div>
+<div id="options"></div>
+<div class="center">
+<button class="red" onclick="previous()">⬅ पिछला</button>
+<button onclick="next()">अगला ➜</button>
+</div>
+<div class="center">
+<button class="green" onclick="submitTest()">TEST SUBMIT करें</button>
+</div>
+</div>
+
+<div class="card hide center" id="result">
+<h2>🏆 आपका टेस्ट रिजल्ट</h2>
+<h1 id="percentage"></h1>
+<p id="score"></p>
+<p id="wrong"></p>
+<p id="skip"></p>
+<button onclick="showReview()">उत्तर एवं व्याख्या देखें</button>
+<button onclick="location.reload()">दोबारा टेस्ट दें</button>
+</div>
+
+<div class="card hide" id="review">
+<h2>📖 Answer Review</h2>
+<div id="reviewContent"></div>
+<button onclick="location.reload()">नया टेस्ट शुरू करें</button>
+</div>
+
+</div>
+<footer>Made with ❤️ | AKASH</footer>
+
+<script>
+const questions = [
+
+{
+t:"❤️ Special Questions",
+q:"क्या तुम आकाश ये प्यार करती हो?",
+o:["नहीं करते","थोड़ा करते","बहुत करते","टाइम पास"],
+a:null,e:"❤️ यह सवाल सिर्फ आकाश के लिए है!"
+},
+{
+t:"❤️ Special Questions",
+q:"क्या तुम आकाश से मिलेगी जनवरी में?",
+o:["हाँ","हाँ जरूर","Yes","मिलूंगी"],
+a:null,e:"❤️ जनवरी की मुलाकात खास होगी!"
+},
+
+{
+t:"भारत की संरचना",
+q:"भारत का कुल क्षेत्रफल लगभग कितना है?",
+o:["32.87 लाख वर्ग किमी","30.50 लाख वर्ग किमी","35.50 लाख वर्ग किमी","28.75 लाख वर्ग किमी"],
+a:0,e:"भारत का क्षेत्रफल लगभग 32.87 लाख वर्ग किलोमीटर है।"
+},
+{
+t:"भारत की संरचना",
+q:"क्षेत्रफल की दृष्टि से भारत का विश्व में कौन-सा स्थान है?",
+o:["सातवाँ","पाँचवाँ","छठा","आठवाँ"],
+a:0,e:"क्षेत्रफल के आधार पर भारत विश्व का सातवाँ सबसे बड़ा देश है।"
+},
+{
+t:"भारत की संरचना",
+q:"भारत की मुख्य भूमि का दक्षिणतम अक्षांश कौन-सा है?",
+o:["6°45' उत्तरी अक्षांश","8°4' उत्तरी अक्षांश","10° उत्तर","12° उत्तर"],
+a:1,e:"भारत की मुख्य भूमि का दक्षिणतम अक्षांश 8°4' उत्तरी है।"
+},
+{
+t:"भारत की संरचना",
+q:"भारत का मानक समय किस देशांतर पर आधारित है?",
+o:["75° पूर्व","82°30' पूर्व","90° पूर्व","68°7' पूर्व"],
+a:1,e:"82°30' पूर्व देशांतर भारत की मानक समय रेखा है।"
+},
+{
+t:"भारत की संरचना",
+q:"भारत का सबसे बड़ा राज्य क्षेत्रफल के आधार पर कौन-सा है?",
+o:["उत्तर प्रदेश","मध्य प्रदेश","राजस्थान","महाराष्ट्र"],
+a:2,e:"राजस्थान क्षेत्रफल की दृष्टि से भारत का सबसे बड़ा राज्य है।"
+},
+
+{
+t:"उत्तरी पर्वत",
+q:"हिमालय किस प्रकार का पर्वत है?",
+o:["ज्वालामुखी पर्वत","प्राचीन वलित पर्वत","नवीन वलित पर्वत","अवशिष्ट पर्वत"],
+a:2,e:"हिमालय नवीन वलित पर्वत का उदाहरण है।"
+},
+{
+t:"उत्तरी पर्वत",
+q:"हिमालय की सबसे उत्तरी एवं सबसे ऊँची श्रेणी कौन-सी है?",
+o:["शिवालिक","हिमाचल","हिमाद्रि","अरावली"],
+a:2,e:"हिमाद्रि को महान हिमालय भी कहा जाता है।"
+},
+{
+t:"उत्तरी पर्वत",
+q:"शिवालिक श्रेणी किस हिमालय का भाग है?",
+o:["महान हिमालय","लघु हिमालय","बाह्य हिमालय","ट्रांस हिमालय"],
+a:2,e:"शिवालिक हिमालय की सबसे बाहरी एवं दक्षिणी श्रेणी है।"
+},
+{
+t:"उत्तरी पर्वत",
+q:"कंचनजंघा पर्वत किस पर्वत श्रेणी में स्थित है?",
+o:["अरावली","हिमालय","विंध्य","सतपुड़ा"],
+a:1,e:"कंचनजंघा हिमालय की एक प्रमुख ऊँची चोटी है।"
+},
+{
+t:"उत्तरी पर्वत",
+q:"पीर पंजाल श्रेणी किस हिमालय का हिस्सा है?",
+o:["लघु हिमालय","शिवालिक","महान हिमालय","ट्रांस हिमालय"],
+a:0,e:"पीर पंजाल लघु हिमालय की प्रमुख श्रेणी है।"
+},
+
+{
+t:"UP GK - स्थिति एवं संरचना",
+q:"उत्तर प्रदेश की राजधानी कौन-सी है?",
+o:["कानपुर","प्रयागराज","लखनऊ","वाराणसी"],
+a:2,e:"लखनऊ उत्तर प्रदेश की राजधानी है।"
+},
+{
+t:"UP GK - स्थिति एवं संरचना",
+q:"उत्तर प्रदेश भारत के किस भाग में स्थित है?",
+o:["दक्षिणी","उत्तरी","पश्चिमी","पूर्वोत्तर"],
+a:1,e:"उत्तर प्रदेश भारत के उत्तरी भाग में स्थित है।"
+},
+{
+t:"UP GK - स्थिति एवं संरचना",
+q:"उत्तर प्रदेश की सीमा किस देश से लगती है?",
+o:["भूटान","बांग्लादेश","नेपाल","पाकिस्तान"],
+a:2,e:"उत्तर प्रदेश की उत्तरी सीमा नेपाल से लगती है।"
+},
+{
+t:"UP GK - स्थिति एवं संरचना",
+q:"उत्तर प्रदेश का अधिकांश भाग किस भौतिक प्रदेश में आता है?",
+o:["दक्कन का पठार","गंगा का मैदान","थार मरुस्थल","तटीय मैदान"],
+a:1,e:"उत्तर प्रदेश का अधिकांश क्षेत्र गंगा के विशाल मैदान में आता है।"
+},
+{
+t:"UP GK - स्थिति एवं संरचना",
+q:"उत्तर प्रदेश के दक्षिणी भाग में कौन-सा भौतिक प्रदेश पाया जाता है?",
+o:["हिमालय","बुंदेलखंड एवं विंध्य क्षेत्र","तटीय मैदान","मरुस्थल"],
+a:1,e:"दक्षिणी उत्तर प्रदेश में बुंदेलखंड एवं विंध्य क्षेत्र पाया जाता है।"
+},
+
+{
+t:"जलवायु",
+q:"उत्तर प्रदेश की जलवायु मुख्यतः किस प्रकार की है?",
+o:["भूमध्यसागरीय","उष्णकटिबंधीय मानसूनी","ध्रुवीय","भूमध्यरेखीय"],
+a:1,e:"उत्तर प्रदेश की जलवायु उष्णकटिबंधीय मानसूनी प्रकार की है।"
+},
+{
+t:"जलवायु",
+q:"उत्तर प्रदेश में अधिकांश वर्षा किस मानसून से होती है?",
+o:["उत्तर-पूर्वी मानसून","दक्षिण-पश्चिमी मानसून","पश्चिमी विक्षोभ","स्थानीय हवाएँ"],
+a:1,e:"दक्षिण-पश्चिमी मानसून उत्तर प्रदेश में अधिकांश वर्षा करता है।"
+},
+{
+t:"जलवायु",
+q:"उत्तर प्रदेश में सामान्यतः सबसे अधिक गर्मी किस महीने में पड़ती है?",
+o:["जनवरी","मार्च","मई","दिसंबर"],
+a:2,e:"मई सामान्यतः उत्तर प्रदेश के सबसे गर्म महीनों में से एक है।"
+},
+{
+t:"जलवायु",
+q:"उत्तर प्रदेश में शीतकालीन वर्षा का प्रमुख कारण क्या है?",
+o:["लू","पश्चिमी विक्षोभ","दक्षिण-पश्चिम मानसून","चक्रवात"],
+a:1,e:"पश्चिमी विक्षोभ से उत्तर प्रदेश के कुछ भागों में शीतकालीन वर्षा होती है।"
+},
+{
+t:"जलवायु",
+q:"उत्तर प्रदेश में वर्षा की मात्रा सामान्यतः किस दिशा में घटती है?",
+o:["पश्चिम से पूर्व","पूर्व से पश्चिम","उत्तर से दक्षिण","दक्षिण से उत्तर"],
+a:1,e:"उत्तर प्रदेश में सामान्यतः पूर्व से पश्चिम की ओर वर्षा घटती है।"
+},
+
+{
+t:"मृदा",
+q:"उत्तर प्रदेश में सबसे अधिक कौन-सी मिट्टी पाई जाती है?",
+o:["लाल मिट्टी","काली मिट्टी","जलोढ़ मिट्टी","लेटराइट मिट्टी"],
+a:2,e:"गंगा के मैदान के कारण उत्तर प्रदेश में जलोढ़ मिट्टी का विस्तार सबसे अधिक है।"
+},
+{
+t:"मृदा",
+q:"खादर मिट्टी किस प्रकार की मिट्टी है?",
+o:["पुरानी जलोढ़","नई जलोढ़","काली मिट्टी","लाल मिट्टी"],
+a:1,e:"खादर नई जलोढ़ मिट्टी है जो नदियों के बाढ़ क्षेत्र में मिलती है।"
+},
+{
+t:"मृदा",
+q:"बांगर मिट्टी किसे कहा जाता है?",
+o:["नई जलोढ़ मिट्टी","पुरानी जलोढ़ मिट्टी","रेतीली मिट्टी","लाल मिट्टी"],
+a:1,e:"बांगर पुरानी जलोढ़ मिट्टी को कहा जाता है।"
+},
+{
+t:"मृदा",
+q:"काली मिट्टी किस फसल के लिए विशेष रूप से उपयोगी मानी जाती है?",
+o:["कपास","चाय","जूट","नारियल"],
+a:0,e:"काली मिट्टी कपास की खेती के लिए विशेष रूप से उपयुक्त होती है।"
+},
+{
+t:"मृदा",
+q:"उत्तर प्रदेश के बुंदेलखंड क्षेत्र में कौन-सी मिट्टी पाई जाती है?",
+o:["जलोढ़ मिट्टी","लाल एवं पीली मिट्टी","पीट मिट्टी","लैटेराइट मिट्टी"],
+a:1,e:"बुंदेलखंड के कुछ भागों में लाल एवं पीली मिट्टी पाई जाती है।"
+},
+
+{
+t:"कृषि",
+q:"उत्तर प्रदेश की प्रमुख खाद्यान्न फसल कौन-सी है?",
+o:["चाय","गेहूँ","कॉफी","रबर"],
+a:1,e:"गेहूँ उत्तर प्रदेश की प्रमुख खाद्यान्न फसलों में शामिल है।"
+},
+{
+t:"कृषि",
+q:"उत्तर प्रदेश में गन्ने की खेती मुख्यतः किस क्षेत्र में अधिक होती है?",
+o:["पश्चिमी उत्तर प्रदेश","बुंदेलखंड","दक्षिणी पठार","विंध्य क्षेत्र"],
+a:0,e:"पश्चिमी उत्तर प्रदेश गन्ना उत्पादन का प्रमुख क्षेत्र है।"
+},
+{
+t:"कृषि",
+q:"धान किस ऋतु की फसल है?",
+o:["रबी","खरीफ","जायद","शीतकालीन"],
+a:1,e:"धान मुख्यतः खरीफ ऋतु की फसल है।"
+},
+{
+t:"कृषि",
+q:"गेहूँ किस ऋतु की फसल है?",
+o:["खरीफ","जायद","रबी","वर्षा ऋतु"],
+a:2,e:"गेहूँ रबी ऋतु की प्रमुख फसल है।"
+},
+{
+t:"कृषि",
+q:"उत्तर प्रदेश में आलू उत्पादन के लिए प्रसिद्ध क्षेत्र कौन-सा है?",
+o:["आगरा एवं फर्रुखाबाद","ललितपुर एवं झांसी","सोनभद्र एवं मिर्जापुर","बलिया एवं गाजीपुर"],
+a:0,e:"आगरा एवं फर्रुखाबाद आलू उत्पादन के प्रमुख क्षेत्रों में शामिल हैं।"
+}
+];
+
+let current=0;
+let answers=new Array(questions.length).fill(null);
+let submitted=false;
+
+function render(){
+ let q=questions[current];
+ document.getElementById("number").innerText=current+1;
+ document.getElementById("topic").innerText="📖 "+q.t;
+ document.getElementById("question").innerText=
+ "Q"+(current+1)+". "+q.q;
+ document.getElementById("options").innerHTML="";
+ q.o.forEach((op,i)=>{
+ let label=document.createElement("label");
+ label.className="option"+(answers[current]===i?" selected":"");
+ label.innerHTML=`<input type="radio" name="answer" ${answers[current]===i?"checked":""}> ${String.fromCharCode(65+i)}. ${op}`;
+ label.onclick=()=>{
+ answers[current]=i;
+ render();
+ };
+ document.getElementById("options").appendChild(label);
+ });
+ document.getElementById("live").innerText=
+ answers.filter((a,i)=>questions[i].a!==null && a===questions[i].a).length;
+ document.getElementById("bar").style.width=
+ ((current+1)/questions.length*100)+"%";
+}
+
+function next(){
+ if(current<questions.length-1){current++;render();}
+ else alert("यह अंतिम प्रश्न है। टेस्ट सबमिट करें।");
+}
+
+function previous(){
+ if(current>0){current--;render();}
+}
+
+function submitTest(){
+ if(submitted)return;
+ let blank=answers.filter(a=>a===null).length;
+ if(!confirm("क्या आप टेस्ट सबमिट करना चाहते हैं? अनुत्तरित प्रश्न: "+blank))return;
+ submitted=true;
+
+ let right=0,wrong=0,skip=0;
+ questions.forEach((q,i)=>{
+ if(q.a===null){
+   if(answers[i]===null)skip++;
+   return;
+ }
+ if(answers[i]===q.a)right++;
+ else if(answers[i]!==null)wrong++;
+ else skip++;
+ });
+
+ let percent=Math.round(right/(questions.length-2)*100);
+ document.getElementById("quiz").classList.add("hide");
+ document.getElementById("result").classList.remove("hide");
+ document.getElementById("percentage").innerText=percent+"%";
+ document.getElementById("score").innerText=
+ "✅ सही उत्तर: "+right+" / 30";
+ document.getElementById("wrong").innerText=
+ "❌ गलत उत्तर: "+wrong;
+ document.getElementById("skip").innerText=
+ "⏭ छोड़े गए GK प्रश्न: "+(30-right-wrong);
+}
+
+function showReview(){
+ document.getElementById("result").classList.add("hide");
+ document.getElementById("review").classList.remove("hide");
+ let html="";
+ questions.forEach((q,i)=>{
+ let status=q.a===null?"special":(answers[i]===q.a?"correct":"wrong");
+ html+=`<div class="review">
+ <b>Q${i+1}. ${q.q}</b><br><br>
+ आपका उत्तर: <span class="${status}">${answers[i]===null?"नहीं दिया":q.o[answers[i]]}</span><br>`;
+ if(q.a!==null){
+ html+=`सही उत्तर: <span class="correct">${q.o[q.a]}</span><br>`;
+ }
+ html+=`<br><b>व्याख्या:</b> ${q.e}</div>`;
+ });
+ document.getElementById("reviewContent").innerHTML=html;
+}
+
+render();
+</script>
+</body>
+</html>
